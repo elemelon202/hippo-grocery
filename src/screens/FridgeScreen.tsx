@@ -3,20 +3,18 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react
 import { FridgeItem, Ingredient } from '../types';
 import { ingredients } from '../data/ingredients';
 import AddItemModal from '../components/AddItemModal';
+import { useFridgeStore } from '../store/fridgeStore';
 
 export default function FridgeScreen() {
-  const [fridgeItems, setFridgeItems] = useState<FridgeItem[]>([]);
+  const { fridgeItems, addItem, removeItem } = useFridgeStore();
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleAddItem = (ingredient: Ingredient) => {
-    if (fridgeItems.some((item) => item.ingredient.id === ingredient.id)) {
-      return;
-    }
-    setFridgeItems([...fridgeItems, { ingredient, purchaseDate: new Date() }]);
+    addItem(ingredient);
   };
 
   const handleRemoveItem = (ingredientId: string) => {
-    setFridgeItems(fridgeItems.filter((item) => item.ingredient.id !== ingredientId));
+    removeItem(ingredientId);
   };
 
   const confirmRemove = (item: FridgeItem) => {
@@ -31,8 +29,9 @@ export default function FridgeScreen() {
   };
 
   const getDaysUntilSpoil = (item: FridgeItem): number => {
+    const purchaseDate = new Date(item.purchaseDate)
     const daysSincePurchase = Math.floor(
-      (Date.now() - item.purchaseDate.getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - purchaseDate.getTime()) / (1000 * 60 * 60 * 24)
     );
     return item.ingredient.spoilageDays - daysSincePurchase;
   };
