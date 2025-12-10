@@ -12,6 +12,9 @@ export interface Ingredient {
   category: IngredientCategory;
   spoilageDays: number;
   rarity?: number; // for hippo store
+  typicalPrice: number;
+  seasonality?: ("spring" | "summer" | "autumn" | "winter")[];
+  servings: number;
 }
 
 export interface FridgeItem {
