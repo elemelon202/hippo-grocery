@@ -1,12 +1,13 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { FridgeItem, Ingredient } from '../types';
 import { ingredients } from '../data/ingredients';
 import AddItemModal from '../components/AddItemModal';
 import { useFridgeStore } from '../store/fridgeStore';
+import Hippo from '../components/Hippo';
 
 export default function FridgeScreen() {
-  const { fridgeItems, addItem, removeItem } = useFridgeStore();
+  const { fridgeItems, addItem, removeItem, clearFridge } = useFridgeStore();
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleAddItem = (ingredient: Ingredient) => {
@@ -24,6 +25,17 @@ export default function FridgeScreen() {
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Used', onPress: () => handleRemoveItem(item.ingredient.id) },
+      ]
+    );
+  };
+
+  const confirmClear = () => {
+    Alert.alert(
+      'Empty fridge?',
+      'Remove all items from the fridge?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Empty', style: 'destructive', onPress: clearFridge },
       ]
     );
   };
@@ -51,7 +63,7 @@ export default function FridgeScreen() {
           <View style={[styles.urgencyDot, { backgroundColor: getUrgencyColor(daysLeft) }]} />
           <View style={styles.itemText}>
             <Text style={styles.itemName}>{item.ingredient.name}</Text>
-            <Text style={styles.itemSub}>{item.ingredient.nameEn}</Text>
+            <Text style={styles.itemSub}>{item.ingredient.nameEn} • {item.servingsRemaining ?? item.ingredient.servings} servings</Text>
           </View>
           <Text style={styles.daysLeft}>
             {daysLeft <= 0 ? '!' : `${daysLeft}d`}
@@ -68,6 +80,7 @@ export default function FridgeScreen() {
 
         {fridgeItems.length === 0 ? (
           <View style={styles.empty}>
+            <Hippo mode="sleeping" size={100} />
             <Text style={styles.emptyText}>Your fridge is empty!</Text>
             <Text style={styles.emptySubtext}>Tap below to add ingredients</Text>
           </View>
@@ -80,9 +93,14 @@ export default function FridgeScreen() {
           />
         )}
 
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.addButtonText}>+ Add Item</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.clearButton} onPress={confirmClear}>
+            <Text style={styles.clearButtonText}>Empty Fridge</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+            <Text style={styles.addButtonText}>+ Add Item</Text>
+          </TouchableOpacity>
+        </View>
 
       <AddItemModal
         visible={modalVisible}
@@ -163,12 +181,29 @@ export default function FridgeScreen() {
       fontWeight: '600',
       color: '#636e72',
     },
+    buttonRow: {
+      flexDirection: 'row',
+      gap: 12,
+      marginBottom: 40,
+    },
+    clearButton: {
+      flex: 1,
+      backgroundColor: '#e0e0e0',
+      padding: 16,
+      borderRadius: 12,
+      alignItems: 'center',
+    },
+    clearButtonText: {
+      color: '#636e72',
+      fontSize: 16,
+      fontWeight: '600',
+    },
     addButton: {
+      flex: 2,
       backgroundColor: '#74b9ff',
       padding: 16,
       borderRadius: 12,
       alignItems: 'center',
-      marginBottom: 40,
     },
     addButtonText: {
       color: '#fff',

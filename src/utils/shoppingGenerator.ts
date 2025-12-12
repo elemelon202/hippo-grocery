@@ -1,50 +1,39 @@
-import { Ingredient } from '../types';
+import { Ingredient, Meal } from '../types';
+import { getMealCost } from './mealCost';
 
 interface ShoppingResult {
   items: Ingredient[];
   totalCost: number;
-  totalServings: number;
+  mealsEnabled: number;
 }
 
-export function generateShoppingList(ingredients: Ingredient[], budget: number, targetMeals: number = 7,): ShoppingResult {
-  const sorted = [...ingredients].sort((a, b) => {
-    const efficiencyA = a.servings / a.typicalPrice;
-    const efficiencyB = b.servings / b.typicalPrice;
-    return efficiencyB - efficiencyA
+export function generateShoppingList(ingredients: Ingredient[], meals: Meal[], budget: number): ShoppingResult {
+  const sortedMeals = [...meals].sort((a, b) => {
+   return getMealCost(a, ingredients) - getMealCost(b, ingredients)
   });
 
-  const selected: Ingredient[] = [];
+  const selectedIds = new Set<string>();
   let totalCost = 0;
-  let proteinServings = 0;
-  let veggieServings = 0;
+  let mealsEnabled = 0;
 
-  for (const item of sorted) {
-    if (item.category === 'protein' && totalCost + item.typicalPrice <= budget) {
-      selected.push(item);
-      totalCost += item.typicalPrice;
-      proteinServings += item.servings;
-      if (proteinServings >= targetMeals) break;
-    }
+  for (const meal of sortedMeals) {
+    const newIngIds = meal.requiredIngredients.filter(id => !selectedIds.has(id))
+    let incrementalCost = 0;
+      newIngIds.forEach((ingId) => {
+        const found = ingredients.find(item => item.id === ingId);
+        incrementalCost += found?.typicalPrice || 0;
+      });
+      if ((totalCost + incrementalCost) <= budget) {
+          newIngIds.forEach(id => selectedIds.add(id));
+          totalCost += incrementalCost;
+          mealsEnabled ++;
+        }
   }
-
-  for (const item of sorted) {
-    if (item.category === 'vegetable' && totalCost + item.typicalPrice <= budget) {
-      selected.push(item);
-      totalCost += item.typicalPrice;
-      veggieServings += item.servings;
-    }
-  }
-
-  for (const item of sorted) {
-    if (!selected.includes(item) && totalCost + item.typicalPrice <= budget) {
-      selected.push(item);
-      totalCost += item.typicalPrice;
-    }
-  }
+  const items = ingredients.filter(item => selectedIds.has(item.id));
 
   return {
-    items: selected,
+    items,
     totalCost,
-    totalServings: selected.reduce((sum, item) => sum + item.servings, 0),
-  };
+    mealsEnabled
+  }
 }
