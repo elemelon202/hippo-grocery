@@ -40,7 +40,7 @@
                 case 'Meals':
                   iconName = focused ? 'restaurant' : 'restaurant-outline';
                   break;
-                case 'Store':
+                case 'Restaurant':
                   iconName = focused ? 'storefront' : 'storefront-outline';
                   break;
                 default:
@@ -57,7 +57,7 @@
           <Tab.Screen name="Fridge" component={FridgeScreen} />
           <Tab.Screen name="Shopping" component={ShoppingScreen} />
           <Tab.Screen name="Meals" component={MealStackScreen} />
-          <Tab.Screen name="Store" component={StoreScreen} />
+          <Tab.Screen name="Restaurant" component={StoreScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     );

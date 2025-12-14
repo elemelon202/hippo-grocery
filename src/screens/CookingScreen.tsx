@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated, Easing,
 import { useFridgeStore } from '../store/fridgeStore';
 import { useMealHistoryStore } from '../store/mealHistoryStore';
 import { usePantryStore } from '../store/pantryStore';
+import { useRestaurantStore } from '../store/restaurantStore';
 import Hippo, { HippoMode } from '../components/Hippo';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -52,6 +53,7 @@ export default function CookingScreen({ route, navigation }: any) {
   const { useIngredient, addLeftover } = useFridgeStore();
   const { pantryItems } = usePantryStore();
   const { addMealToHistory } = useMealHistoryStore();
+  const { addMealToMenu } = useRestaurantStore();
 
   const servingsPerRecipe = meal.servingsPerRecipe || 2;
   const step = meal.cookingSteps[currentStep];
@@ -72,6 +74,16 @@ export default function CookingScreen({ route, navigation }: any) {
     });
     // Record this meal for variety tracking
     addMealToHistory(meal.id);
+
+    // Add all servings to the restaurant menu
+    addMealToMenu({
+      mealId: meal.id,
+      mealName: meal.name,
+      mealNameJp: meal.nameJp,
+      mealEmoji: meal.imageEmoji,
+      effort: meal.effort,
+      servings: servingsPerRecipe,
+    });
 
     // Save leftovers if not all portions eaten
     const leftoverPortions = servingsPerRecipe - portionsEaten;

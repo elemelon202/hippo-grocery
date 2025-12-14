@@ -87,3 +87,22 @@ export interface Leftover {
   servingsRemaining: number;
   cookedDate: Date;
 }
+
+// Restaurant game types
+export interface MenuItem {
+  id: string;
+  mealId: string;
+  mealName: string;
+  mealNameJp: string;
+  mealEmoji: string;
+  effort: EffortLevel;
+  stock: number;
+  addedAt: number; // timestamp
+}
+
+export interface RestaurantStats {
+  totalMealsSold: number;
+  totalCoinsEarned: number;
+}
+
+export type UpgradeType = 'speed' | 'value' | 'capacity';
