@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hippo-grocery",
-    "slug": "hippo-grocery",
+    "name": "test-app",
+    "slug": "test-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,30 +12,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "scheme": "hippo-grocery",
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.elemelon202.hippogrocery",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.elemelon202.hippogrocery"
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "a146d414-ab7d-4b22-9025-9c98a83a263c"
-      }
     }
   }
 }

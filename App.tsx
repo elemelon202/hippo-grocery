@@ -1,29 +1,29 @@
- import { NavigationContainer } from '@react-navigation/native';
-  import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-  import { createNativeStackNavigator } from '@react-navigation/native-stack'
-  import { Ionicons } from '@expo/vector-icons';
-  import FridgeScreen from './src/screens/FridgeScreen';
-  import ShoppingScreen from './src/screens/ShoppingScreen';
-  import MealScreen from './src/screens/MealScreen';
-  import StoreScreen from './src/screens/StoreScreen';
-  import CookingScreen from './src/screens/CookingScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
+import FridgeScreen from './src/screens/FridgeScreen';
+import ShoppingScreen from './src/screens/ShoppingScreen';
+import MealScreen from './src/screens/MealScreen';
+import StoreScreen from './src/screens/StoreScreen';
+import CookingScreen from './src/screens/CookingScreen';
 
-  const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
+const MealStack = createNativeStackNavigator();
 
+function MealStackScreen() {
+  return (
+    <MealStack.Navigator screenOptions={{ headerShown: false }}>
+      <MealStack.Screen name="MealList" component={MealScreen} />
+      <MealStack.Screen name="Cooking" component={CookingScreen} />
+    </MealStack.Navigator>
+  );
+}
 
-   const MealStack = createNativeStackNavigator();
-
-  function MealStackScreen() {
-    return (
-      <MealStack.Navigator screenOptions={{ headerShown: false }}>
-        <MealStack.Screen name="MealList" component={MealScreen} />
-        <MealStack.Screen name="Cooking" component={CookingScreen} />
-      </MealStack.Navigator>
-    );
-  }
-
-  export default function App() {
-    return (
+export default function App() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -60,5 +60,6 @@
           <Tab.Screen name="Restaurant" component={StoreScreen} />
         </Tab.Navigator>
       </NavigationContainer>
-    );
-  }
+    </GestureHandlerRootView>
+  );
+}
